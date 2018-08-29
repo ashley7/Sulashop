@@ -34,14 +34,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li>
+                        <li class="nav-item">
                             <a href="{{route('user.index')}}">Users</a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="{{route('category.index')}}">Categories</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{route('product.index')}}">Products</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
@@ -50,7 +58,21 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li>
-                        @else
+                        @else 
+
+                        @php
+                            $total = 0;
+                            $user_cart = App\Cart::all()->where('user_id',Auth::user()->id);
+                            foreach ($user_cart as $cart_value) {
+                                $total = $total + ($cart_value->quantity * $cart_value->product->salling_price);
+                            }
+                        @endphp
+
+
+                          <li>
+                              <a href="{{route('cart.show',Auth::user()->id)}}">Cart: ${{number_format($total)}}</a>
+                          </li>
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -78,5 +100,7 @@
             @yield('content')
         </main>
     </div>
+   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    @stack('scripts')
 </body>
 </html>
