@@ -16,17 +16,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $results = json_decode('{
-            "code": 200,
-            "status": "PENDING",
-            "message": "Transaction Initiated",
-            "data": {
-                "transaction_id": "1513795691",
-                "payment_url": "https://app.ugmart.ug/api/visa-payment/1513852112505"
-            }
-        }',TRUE);
-
-        return $results['data']['transaction_id'];
+        
     }
 
     /**
