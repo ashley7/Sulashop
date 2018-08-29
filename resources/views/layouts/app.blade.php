@@ -14,9 +14,7 @@
 
         <!-- Switchery css -->
         <link href="{{asset('back_end/assets/plugins/switchery/switchery.min.css')}}" rel="stylesheet" />
-         <link href="{{asset('back_end/assets/plugins/custombox/css/custombox.min.css')}}" rel="stylesheet">
-      <!--   <link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css"> -->
+         <link href="{{asset('back_end/assets/plugins/custombox/css/custombox.min.css')}}" rel="stylesheet">      
 
         <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/buttons.dataTables.min.css') }}">
