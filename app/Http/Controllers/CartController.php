@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Cart;
 use App\Product;
+use App\Transaction;
 
 class CartController extends Controller
 {
@@ -15,7 +16,17 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        $results = json_decode('{
+            "code": 200,
+            "status": "PENDING",
+            "message": "Transaction Initiated",
+            "data": {
+                "transaction_id": "1513795691",
+                "payment_url": "https://app.ugmart.ug/api/visa-payment/1513852112505"
+            }
+        }',TRUE);
+
+        return $results['data']['transaction_id'];
     }
 
     /**
@@ -97,5 +108,118 @@ class CartController extends Controller
     {
         Cart::destroy($id);
         return back();
+    }
+
+
+    public function visaTransactions($amount)
+    {
+        if (!function_exists('curl_init')){
+            echo 'Sorry cURL is not installed!';
+        }
+         
+        $loginresults=$this->login_results();
+        $url="https://app.ugmart.ug/api/request-payment";
+        $vendor_id=time(); 
+        $post_data=array(           
+            'TransactionReference'=>'a6006ad3dba'.$vendor_id,
+            'account_code'=>'UGM1535575513',
+            'transaction_id'=>'auto',
+            'provider_id'=>'visa_mastercard',
+            'msisdn'=>\Auth::user()->phone_number,            
+            'currency'=> 'UGX',
+            'amount'=>(int)$amount,
+            'application'=> 'SulaShop',
+            'description'=> 'Payment Request for my Cart.',
+            'callback_url'=>'http://127.0.0.1:8000/savetransactions',
+        );
+        $ch=curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($post_data));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 ;Windows NT 6.1; WOW64; AppleWebKit/537.36 ;KHTML, like Gecko; Chrome/39.0.2171.95 Safari/537.36");
+        try {
+             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Authorization: Bearer '.$loginresults['token']));
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }     
+
+        $output=curl_exec($ch);
+        curl_close($ch);
+        return $output;
+      
+    }
+
+      public function login_results(){    
+           $loginpost_data=array(          
+            "password"=>"inovation#",
+            "email"=>"thembocharles123@gmail.com",            
+        );
+ 
+        // Login
+        $login=curl_init();
+        curl_setopt($login, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($login, CURLOPT_URL, "https://app.ugmart.ug/api/login");
+        curl_setopt($login, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($login, CURLOPT_POST, TRUE);
+        curl_setopt($login, CURLOPT_POSTFIELDS, json_encode($loginpost_data));
+        curl_setopt($login, CURLOPT_HEADER, 0);
+        curl_setopt($login, CURLOPT_USERAGENT, "Mozilla/5.0 ;Windows NT 6.1; WOW64; AppleWebKit/537.36 ;KHTML, like Gecko; Chrome/39.0.2171.95 Safari/537.36");
+        curl_setopt($login, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+        $loginoutput=curl_exec($login);
+        curl_close($login);
+        $loginresults=json_decode($loginoutput,TRUE);
+
+        return $loginresults;
+    }
+
+
+    public function pay_cart()
+    {
+        $user_cart = Cart::all()->where('user_id',\Auth::user()->id)->where('status',0);
+        $amount = 0;
+        foreach ($user_cart as $carts) {
+            $amount =  $amount + ($carts->quantity * $carts->product->salling_price);
+        }
+        $results = json_decode($this->visaTransactions($amount),TRUE);
+        if ($results["status"] == "PENDING") {
+            $save_transaction_copy = new Transaction();
+            $save_transaction_copy->transaction_id = $results['data']['transaction_id'];
+            $save_transaction_copy->status = $results["status"];
+            $save_transaction_copy->message = $results["message"];
+            $save_transaction_copy->amount = $amount;
+            $save_transaction_copy->user_id = \Auth::user()->id;
+            $save_transaction_copy->save();
+            echo file_get_contents($results['data']['payment_url']);//start the URL in the browser
+            exit();
+        }
+        else{
+           $status = $results["message"]; 
+        }
+        return back()->with(['status'=>$status]); 
+     }
+
+    public function savetransactions()
+    {
+        if ($_GET["status"]=="SUCCESS"){
+            $user_cart = Cart::all()->where('user_id',\Auth::user()->id)->where('status',0);
+            foreach ($user_cart as $carts) {
+               $updates = Cart::find($carts->id);
+               $updates->status = 1;
+               $status->save();
+            } 
+
+            $updates_transaction = Transaction::all()->where('transaction_id',$_GET['data']["transaction_id"])->last();
+            if (json_encode($updates_transaction) != "null") {
+                 $updates_transaction->status = $_GET["status"];
+                 $updates_transaction->save();
+            }    
+        }       
+        else{
+            return redirect()->route('product.index')->with(['status'=>$_GET["message"]]); 
+        }
     }
 }

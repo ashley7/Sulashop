@@ -62,7 +62,7 @@
 
                         @php
                             $total = 0;
-                            $user_cart = App\Cart::all()->where('user_id',Auth::user()->id);
+                            $user_cart = App\Cart::all()->where('user_id',Auth::user()->id)->where('status',0);
                             foreach ($user_cart as $cart_value) {
                                 $total = $total + ($cart_value->quantity * $cart_value->product->salling_price);
                             }
@@ -97,6 +97,11 @@
         </nav>
 
         <main class="py-4">
+               @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif  
             @yield('content')
         </main>
     </div>
