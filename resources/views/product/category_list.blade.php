@@ -1,14 +1,12 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">List of Categories</div>
+<h1>List of Categories</h1>
+  <a class="btn btn-success" style="float: right;" href="{{route('category.create')}}">Add category</a>
+  <br><br>
 
-        <a href="{{route('category.create')}}">Add category</a>
-
-        <div class="card-body">
+        <div class="card-box">
             <div class="table-responsive">
-              <table class="table">
+              <table class="table table-sales" id="sales">
                   <thead>
                       <th>#</th>
                       <th>Name</th>
@@ -32,7 +30,6 @@
                   </tbody>
               </table>             
           </div>
-      </div>
-  </div>
-</div>
+        </div>
+      
 @endsection

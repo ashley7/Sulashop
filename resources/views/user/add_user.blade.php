@@ -1,13 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">{{ __('Add Store man') }}</div>
+<h1>{{ __('Add Store man') }}</h1>
+ 
+              
 
-                <div class="card-body">
+                <div class="card-box">
                     <form method="POST" action="{{ route('user.store') }}" aria-label="{{ __('Register') }}">
                         @csrf
 
@@ -59,8 +57,6 @@
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+                
+        
 @endsection

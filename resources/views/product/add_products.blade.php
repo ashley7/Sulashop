@@ -1,10 +1,8 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">Add Property</div>     
+<h1>Add Property</h1>  
 
-        <div class="card-body">
+        <div class="card-box">
 
           <form method="POST" action="{{route('product.store')}}" enctype="multipart/form-data">
             @csrf
@@ -35,6 +33,5 @@
 
                         
         </div>
-    </div>
-</div> 
+   
 @endsection

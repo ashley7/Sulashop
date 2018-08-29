@@ -23,6 +23,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+
+        if (\Auth::user()->hasRole('admin')) {
+             return redirect()->route('reports');
+        }else{
+           return redirect()->route('product.index'); 
+        }
+
+
         return view('home');
     }
 }

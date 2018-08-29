@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">Items on your Cart </div>     
-            <div class="card-body">
-                <a href="/pay_cart" class="btn btn-primary">Pay Cart</a><br><br>
+<h1>Items on your Cart</h1>
+ 
+            
+            <div class="card-box">
+                <a style="float: right;" class="btn btn-primary" href="/pay_cart" class="btn btn-primary">Pay Cart</a><br><br>
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="sales">
                         <?php $sumation = 0; ?>
                         <thead>
                             <th>#</th> <th>Item Name</th> <th>Picture</th> <th>Quantity</th> <th>Unit Price(USD)</th> <th>Amount (USD)</th> <th>Status</th> <th>Action</th>
@@ -29,9 +29,9 @@
                                   <td>{{number_format($carts->quantity * $carts->product->salling_price)}}</td>
                                   <td>
                                     @if($carts->status == 0)
-                                      <span class="alert alert-warning">Pending</span>
+                                      <span class="btn btn-warning">Pending</span>
                                       @elseif($carts->status == 1)
-                                      <span class="alert alert-success">Paid</span>
+                                      <span class="btn btn-success">Paid</span>
                                     @endif  
                                   </td>
                                   <td>
@@ -48,6 +48,5 @@
                     </table>
                 </div>     
             </div>
-        </div>
-    </div> 
+       
 @endsection

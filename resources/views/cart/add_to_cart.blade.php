@@ -1,30 +1,30 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">{{$product->name}}</div>     
+<h1>{{$product->name}}</h1>
+ 
 
-        <div class="card-body">
+        
             <div class="row">
                 <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
                     <img src="{{asset('images')}}/{{$product->image_url}}" width="100%">
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
-                    <form method="POST" action="{{route('cart.store')}}">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{$product->id}}">
-                        <label>Quantity</label>
-                        <input type="text" id="qnty" name="quantity" value="1" class="form-control">
-                        <br><br>
-                        <span id="total">$ {{number_format($product->salling_price)}}</span>
-                        <br><br>
-                        <button class="btn btn-primary" type="submit">Save to cart</button>
-                    </form>
+                    <div class="card-box">
+                        <form method="POST" action="{{route('cart.store')}}">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{$product->id}}">
+                            <label>Quantity</label>
+                            <input type="text" id="qnty" name="quantity" value="1" class="form-control">
+                            <br><br>
+                            <span id="total">Ugx {{number_format($product->salling_price)}}</span>
+                            <br><br>
+                            <button class="btn btn-primary" type="submit">Save to cart</button>
+                        </form>
                 </div>
             </div>
         </div>
-    </div>
-</div> 
+
+      
 @endsection
 
 @push('scripts')
@@ -40,7 +40,7 @@
 
 function showmobile(data_amount){
     var amount=Math.round(data_amount*({{$product->salling_price}}));
-    $('#total').html("$"+addcommas(amount));      
+    $('#total').html("Ugx "+addcommas(amount));      
 }
 
 function addcommas(str)

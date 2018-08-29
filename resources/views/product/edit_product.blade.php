@@ -1,10 +1,8 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">Add Property</div>     
+<h1>Add Property</h1>   
 
-        <div class="card-body">
+        <div class="card-box">
 
          {{Form::model($product,['method'=>'PATCH', 'action'=>['ProductController@update',$product->id], 'files'=>true])}}
             <label>Name</label>
@@ -24,6 +22,5 @@
             <button class="btn btn-primary" type="submit">Save</button>
           {{ Form::close() }}                        
         </div>
-    </div>
-</div> 
+     
 @endsection

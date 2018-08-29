@@ -1,28 +1,33 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">    
-    <div class="card-header">List of products</div>
-    <a href="{{route('product.create')}}">Add products</a> 
-    <div class="row">  
-        @foreach($products as $product)
+<h1>List of products</h1>
+ @role(['store'])
+    <a style="float: right;" class="btn btn-success" href="{{route('product.create')}}">Add products</a> 
+     <br><br><br>
+ @endrole
+     <div class="row text-center">
+    @foreach($products as $product)
         @php	        
 	        $cart_item_count = App\Cart::all()->where('product_id',$product->id)->where('status',1)->count();
 	    @endphp 
-	   
 	    @if(($product->quentity - $cart_item_count) > 0)
-           	<div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
-        		<div class="card">
-		          <div class="card-body">
-		          	<img src="{{asset('images')}}/{{$product->image_url}}" width="100%">
-		          	<span>$ {{number_format($product->salling_price)}}</span>		      
-		          		<span><a href="{{route('product.edit',$product->id)}}">Edit</a></span>         
-			     		<span><a href="{{route('product.show',$product->id)}}">Add to cart</a></span>	     
-		          </div>
-		        </div>        		
-        	</div>
-        @endif 
+           	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            	<div class="card-box widget-box-one">
+		          	<img src="{{asset('images')}}/{{$product->image_url}}" width="100%" height="200px">
+		          	<span>$ {{number_format($product->salling_price)}}</span>
+		          	  <span style="float: right;">
+		          	  @role('store')
+		          	  	<span><a href="{{route('product.edit',$product->id)}}"><i class="zmdi zmdi-edit"></i></a></span>
+		          	  @endrole
+		         
 
-        @endforeach                 
-    </div> 
-</div>
+		          	  	@role('buyer')       
+			     		<span><a href="{{route('product.show',$product->id)}}"><i class="zmdi zmdi-shopping-cart"></i></a></span>
+			     		@endrole
+		          	  </span>	      
+		           </div>
+		    </div>        		
+        @endif 
+	@endforeach  
+    </div>                  
 @endsection

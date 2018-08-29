@@ -16,7 +16,30 @@ class CartController extends Controller
      */
     public function index()
     {
-        
+        $product_expenses = $payments = $revenue = $pending_payments = 0;
+        $un_paid_items = Cart::all()->where('status',0);
+        $paid_items = Cart::all();
+        $products = Product::all();
+        $transaction_sum = Transaction::all()->sum('amount');
+        $transaction = Transaction::all();
+
+        foreach ($products as $product_value) {
+           $product_expenses = $product_expenses + ($product_value->quentity * $product_value->buying_price);  
+        }
+
+        foreach ($paid_items as $value_paid) {
+            $payments = $payments + ($value_paid->quantity * $value_paid->product->salling_price);
+        }
+
+        $revenue = $payments - $product_expenses;
+
+        foreach ($un_paid_items as $value_un_paid) {
+            $pending_payments = $pending_payments + ($value_un_paid->quantity * $value_un_paid->product->salling_price);
+        }
+
+        $data = ["product_expenses"=>$product_expenses,"payments"=>$payments,"revenue"=>$revenue,"pending_payments"=>$pending_payments,"paid_items"=>$paid_items,"un_paid_items"=>$un_paid_items,"products"=>$products,"transaction_sum"=>$transaction_sum];
+
+        return view('home')->with($data);
     }
 
     /**

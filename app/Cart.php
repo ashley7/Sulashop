@@ -10,4 +10,9 @@ class Cart extends Model
     {
     	return $this->belongsTo('App\Product');
     }
+
+    public function user($value='')
+    {
+    	return $this->belongsTo('App\User');
+    }
 }

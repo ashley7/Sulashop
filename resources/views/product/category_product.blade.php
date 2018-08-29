@@ -1,12 +1,9 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">Product in {{$category->name}} </div>     
-
-        <div class="card-body">
+<h1>Product in {{$category->name}} </h1>
+        <div class="card-box">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover" id="sales">
                     <?php $sumation = 0; ?>
                     <thead>
                         <th>#</th> <th>Picture</th> <th>Item Name</th> <th>Qnty In</th> <th>Qnty Out</th>  <th>Buying Price(USD)</th> <th>Salling price (USD)</th> <th>Expected profit</th>
@@ -40,8 +37,7 @@
                         @endforeach                    
                     </tbody>
                 </table>
-            </div>     
-        </div>
-    </div>
-</div> 
+            </div>
+            </div>   
+        
 @endsection
