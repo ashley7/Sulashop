@@ -18,3 +18,17 @@ After clonning this project
 You may change to CACHE_DRIVER=array instead of file in the .env file
 
 php artisan serve
+
+=========================== WORK FLOW ====================================
+
+1. Main admin logs In
+2. Main admin Adds Store Man
+3. Store man recieves and email containing his password.
+4. Store man adds categories of products
+5. Store man adds products to those categories.
+6. Some body registers. (Any body that registers is given a role of buyer)
+7. Buyer views products
+8. Buyer Adds produts to cart
+9. Buyer Pays his cart
+
+Then somebody will deliver. That is it for now
